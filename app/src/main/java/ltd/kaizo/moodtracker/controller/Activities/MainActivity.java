@@ -1,7 +1,6 @@
 package ltd.kaizo.moodtracker.controller.Activities;
 
 import android.content.Intent;
-import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.widget.Toast;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.CommentDialog;
-import ltd.kaizo.moodtracker.controller.Adapter.VerticalViewPager;
-import ltd.kaizo.moodtracker.controller.Adapter.PagerAdapter;
 import ltd.kaizo.moodtracker.model.MoodItem;
 
 public class MainActivity extends AppCompatActivity implements CommentDialog.CommentDialogListener{
@@ -19,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements CommentDialog.Com
     private MoodItem[] picturelist = new MoodItem[5];
     private ImageButton historyBtn;
     private ImageButton commentBtn;
-    private VerticalViewPager pager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements CommentDialog.Com
 
         this.configurelist();
         this.configureView();
-        this.configureViewpager();
         this.configureHistoryBtn();
         this.configureCommentBtn();
 
@@ -47,15 +43,10 @@ public class MainActivity extends AppCompatActivity implements CommentDialog.Com
 
     //serialize and link widget
     private void configureView() {
-        pager = (VerticalViewPager) findViewById(R.id.activity_main_viewpager);
         historyBtn = (ImageButton) findViewById(R.id.activity_main_history_btn);
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
     }
 
-    private void configureViewpager() {
-        pager.setAdapter(new PagerAdapter(getSupportFragmentManager(), picturelist));
-        pager.setCurrentItem(3);
-    }
 
     private void configureHistoryBtn() {
         historyBtn.setOnClickListener(new View.OnClickListener() {
