@@ -3,12 +3,14 @@ package ltd.kaizo.moodtracker.controller.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.CommentDialog;
+import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
 import ltd.kaizo.moodtracker.model.MoodItem;
 
 public class MainActivity extends AppCompatActivity implements CommentDialog.CommentDialogListener{
@@ -16,15 +18,16 @@ public class MainActivity extends AppCompatActivity implements CommentDialog.Com
     private MoodItem[] picturelist = new MoodItem[5];
     private ImageButton historyBtn;
     private ImageButton commentBtn;
-
+    private ImageButton smiley;
+    private SwipeDetector swipeGesture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.configurelist();
         this.configureView();
+        this.configurelist();
         this.configureHistoryBtn();
         this.configureCommentBtn();
 
@@ -41,10 +44,12 @@ public class MainActivity extends AppCompatActivity implements CommentDialog.Com
 
     }
 
-    //serialize and link widget
+    //serialize ,  link widget & initialize swipe
     private void configureView() {
         historyBtn = (ImageButton) findViewById(R.id.activity_main_history_btn);
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
+        smiley = (ImageButton) findViewById(R.id.activity_main_btn_smiley);
+        swipeGesture = new SwipeDetector(MainActivity.this);
     }
 
 
@@ -69,11 +74,20 @@ public class MainActivity extends AppCompatActivity implements CommentDialog.Com
         });
     }
 
+    public void onSwipeUp() {
+        Toast.makeText(MainActivity.this,"Going UP !!!", Toast.LENGTH_LONG).show();
+    }
+    public void onSwipeDown() {
+        Toast.makeText(MainActivity.this,"Going DOWN !!!", Toast.LENGTH_LONG).show();
+    }
     private void openDialog() {
         CommentDialog commentDialog = new CommentDialog();
         commentDialog.show(getSupportFragmentManager(), "comment dialog");
     }
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return swipeGesture.onTouchEvent(event);
+    }
     @Override
     public void applyText(String comment) {
         Toast.makeText(MainActivity.this, comment, Toast.LENGTH_LONG).show();

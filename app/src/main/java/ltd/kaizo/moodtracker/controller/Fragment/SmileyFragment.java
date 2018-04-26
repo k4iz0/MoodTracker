@@ -40,10 +40,10 @@ public class SmileyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_smiley, container, false);
+        View view =  inflater.inflate(R.layout.activity_main, container, false);
         //get widget from layout and serialise
-        RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.fragment_smiley_layout);
-        ImageButton smiley = (ImageButton) view.findViewById(R.id.fragment_btn_smiley);
+        RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.activity_main_layout);
+        ImageButton smiley = (ImageButton) view.findViewById(R.id.activity_main_btn_smiley);
 
         //get data from bundle
         int color = getArguments().getInt("KEY_COLOR", -1);

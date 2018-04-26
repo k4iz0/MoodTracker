@@ -4,6 +4,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import ltd.kaizo.moodtracker.controller.Activities.MainActivity;
+
 public class SwipeDetector extends GestureDetector {
 
 
