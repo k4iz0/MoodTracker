@@ -22,21 +22,17 @@ public class SwipeDetector extends GestureDetector {
 
                     if (deltaX < 0) {
                         //if we swipe to the left
-                        Log.i("SWIPE", "Swipe LEFT");
                                 result =  true;
                     } else {
                         //we swipe on right
-                        Log.i("SWIPE", "Swipe RIGHT");
                                   result =  true;
                     }
                 } else if (deltaY < 0) {
                     //swipe up
-                    Log.i("SWIPE", "Swipe UP");
                        context.onSwipeUp();
                     result =  true;
                 } else {
                     //swipe down
-                    Log.i("SWIPE", "Swipe DOWN");
                          context.onSwipeDown();
                     result =  true;
                 }

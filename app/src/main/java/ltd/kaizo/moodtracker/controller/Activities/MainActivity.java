@@ -1,22 +1,28 @@
 package ltd.kaizo.moodtracker.controller.Activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
 import ltd.kaizo.moodtracker.model.MoodItem;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private MoodItem[] picturelist = new MoodItem[5];
     private ImageButton historyBtn;
@@ -24,7 +30,9 @@ public class MainActivity extends AppCompatActivity{
     private ImageButton smiley;
     private SwipeDetector swipeGesture;
     private EditText commentEditText;
+    private RelativeLayout mainActivityLayout;
     private SharedPreferences sharedPreferences;
+    private int index = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,7 @@ public class MainActivity extends AppCompatActivity{
 
         this.configureView();
         this.configurelist();
+        this.setMood(index);
         this.configureHistoryBtn();
         this.configureCommentBtn();
 
@@ -46,7 +55,6 @@ public class MainActivity extends AppCompatActivity{
         picturelist[2] = new MoodItem(R.color.cornflower_blue_65, R.drawable.smiley_normal);
         picturelist[3] = new MoodItem(R.color.light_sage, R.drawable.smiley_happy);
         picturelist[4] = new MoodItem(R.color.banana_yellow, R.drawable.smiley_super_happy);
-
     }
 
     //serialize ,  link widget & initialize swipe
@@ -54,6 +62,8 @@ public class MainActivity extends AppCompatActivity{
         historyBtn = (ImageButton) findViewById(R.id.activity_main_history_btn);
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
         smiley = (ImageButton) findViewById(R.id.activity_main_btn_smiley);
+        mainActivityLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
+
         commentEditText = findViewById(R.id.activity_main_dialog_comment);
         swipeGesture = new SwipeDetector(MainActivity.this);
     }
@@ -81,11 +91,27 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void onSwipeUp() {
-        Toast.makeText(MainActivity.this,"Going UP !!!", Toast.LENGTH_LONG).show();
+        index--;
+        setMood(index);
     }
+
     public void onSwipeDown() {
-        Toast.makeText(MainActivity.this,"Going DOWN !!!", Toast.LENGTH_LONG).show();
+        index++;
+        setMood(index);
+
     }
+
+    //method to set mood picture and background
+    private void setMood(int index) {
+        if (index < 0) {
+            index = 0;
+        } else if (index >picturelist.length-1) {
+            index = picturelist.length - 1;
+        }
+        mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
+        smiley.setImageResource(picturelist[index].getImageRessource());
+    }
+
     //method to configure AlertDialog
     private void openDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -95,16 +121,15 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //end alertdialog if "cancel" is pressed
-                    finish();
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                      Toast.makeText(MainActivity.this, "test OK" , Toast.LENGTH_LONG).show();
+                        //record comment
+                        Toast.makeText(MainActivity.this, "test OK", Toast.LENGTH_LONG).show();
                     }
                 }).show();
-
     }
 
 
