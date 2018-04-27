@@ -1,23 +1,18 @@
 package ltd.kaizo.moodtracker.controller.Activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
 import ltd.kaizo.moodtracker.model.MoodItem;
@@ -27,10 +22,10 @@ public class MainActivity extends AppCompatActivity {
     private MoodItem[] picturelist = new MoodItem[5];
     private ImageButton historyBtn;
     private ImageButton commentBtn;
-    private ImageButton smiley;
-    private SwipeDetector swipeGesture;
+    private ImageView smiley;
     private EditText commentEditText;
     private RelativeLayout mainActivityLayout;
+    private SwipeDetector swipeGesture;
     private SharedPreferences sharedPreferences;
     private int index = 3;
 
@@ -61,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private void configureView() {
         historyBtn = (ImageButton) findViewById(R.id.activity_main_history_btn);
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
-        smiley = (ImageButton) findViewById(R.id.activity_main_btn_smiley);
+        smiley = (ImageView) findViewById(R.id.activity_main_smiley);
         mainActivityLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
 
         commentEditText = findViewById(R.id.activity_main_dialog_comment);
@@ -103,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
     //method to set mood picture and background
     private void setMood(int index) {
+        //check if index is in range
         if (index < 0) {
             index = 0;
         } else if (index >picturelist.length-1) {

@@ -1,7 +1,6 @@
 package ltd.kaizo.moodtracker.model;
 
 public class MoodItem {
-
     private int mImageRessource;
     private int mMoodColor;
 
@@ -18,8 +17,6 @@ public class MoodItem {
         mMoodColor = moodColor;
     }
 
-
-
     public int getImageRessource() {
         return mImageRessource;
     }
@@ -27,5 +24,4 @@ public class MoodItem {
     public void setImageRessource(int imageRessource) {
         mImageRessource = imageRessource;
     }
-
 }

@@ -6,6 +6,6 @@
         android:id="@+id/activity_main_dialog_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tell me more about your mood !"
+        android:hint="@string/question"
         />
 </RelativeLayout>
