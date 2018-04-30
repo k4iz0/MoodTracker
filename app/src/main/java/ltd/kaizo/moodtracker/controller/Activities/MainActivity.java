@@ -1,11 +1,13 @@
 package ltd.kaizo.moodtracker.controller.Activities;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -13,9 +15,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
 import ltd.kaizo.moodtracker.model.MoodItem;
+import ltd.kaizo.moodtracker.model.MoodList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout mainActivityLayout;
     private SwipeDetector swipeGesture;
     private SharedPreferences sharedPreferences;
-    private int index = 3;
-
+    private MoodItem currentMood;
+    private String comment;
+    private int index;
+    private Gson gson = new Gson();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.configureView();
         this.configurelist();
-        this.setMood(index);
+        this.checkDailyMood();
+
         this.configureHistoryBtn();
         this.configureCommentBtn();
 
@@ -52,15 +61,19 @@ public class MainActivity extends AppCompatActivity {
         picturelist[4] = new MoodItem(R.color.banana_yellow, R.drawable.smiley_super_happy);
     }
 
-    //serialize ,  link widget & initialize swipe
+    //serialize ,  link widget & initialize variable
     private void configureView() {
+        //views
         historyBtn = (ImageButton) findViewById(R.id.activity_main_history_btn);
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
         smiley = (ImageView) findViewById(R.id.activity_main_smiley);
         mainActivityLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
 
-        commentEditText = findViewById(R.id.activity_main_dialog_comment);
+        //sharePreference
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        //swipe initialization
         swipeGesture = new SwipeDetector(MainActivity.this);
+
     }
 
 
@@ -106,9 +119,10 @@ public class MainActivity extends AppCompatActivity {
         }
         mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
         smiley.setImageResource(picturelist[index].getImageRessource());
+
     }
 
-    //method to configure AlertDialog
+    //method to configure AlertDialog on comment btn
     private void openDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.layout_dialog)
@@ -122,11 +136,42 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //record comment
-                        Toast.makeText(MainActivity.this, "test OK", Toast.LENGTH_LONG).show();
+                        //save comment  into sharePreference
+                        Dialog d = (Dialog) dialog;
+                        commentEditText = (EditText) d.findViewById(R.id.activity_main_dialog_comment);
+                        comment = commentEditText.getText().toString();
+                        currentMood.setComment(comment);
+                        Toast.makeText(MainActivity.this, "comment saved !", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
     }
+
+    private void checkDailyMood() {
+        String json = sharedPreferences.getString("currentMood", null);
+        //get mood of the day if there's one
+        if (json != null) {
+            currentMood = gson.fromJson(json, MoodItem.class);
+            for (int i=0; i<picturelist.length;i++) {
+                if (picturelist[i].getMoodColor() == currentMood.getMoodColor()) {
+                    setMood(i);
+                }
+
+            }
+        } else {
+            //set current mood
+            currentMood = new MoodItem(picturelist[3].getImageRessource(), picturelist[3].getMoodColor(),"");
+            setMood(3);
+        }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //save currentMood
+        currentMood.setImageRessource(picturelist[index].getImageRessource());
+        currentMood.setMoodColor(picturelist[index].getMoodColor());
+        //serialize currentmood
+        sharedPreferences.edit().putString("currentMood", gson.toJson(currentMood)).apply();
+        }
 
 
     //method to route touchevent to swipedetector
