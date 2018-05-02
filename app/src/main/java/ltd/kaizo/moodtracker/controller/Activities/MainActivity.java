@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
+
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
 import ltd.kaizo.moodtracker.model.MoodItem;
@@ -25,7 +27,7 @@ import ltd.kaizo.moodtracker.model.MoodList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MoodItem[] picturelist = new MoodItem[5];
+    private MoodItem[] picturelist ;
     private ImageButton historyBtn;
     private ImageButton commentBtn;
     private ImageView smiley;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeDetector swipeGesture;
     private SharedPreferences sharedPreferences;
     private MoodItem currentMood;
+    private MoodList moodList;
     private String comment;
     private int index;
     private Gson gson = new Gson();
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     //assign picture and background color into arraylist
     private void configurelist() {
-
+        picturelist =  new MoodItem[5];
         picturelist[0] = new MoodItem(R.color.faded_red, R.drawable.smiley_sad);
         picturelist[1] = new MoodItem(R.color.warm_grey, R.drawable.smiley_disappointed);
         picturelist[2] = new MoodItem(R.color.cornflower_blue_65, R.drawable.smiley_normal);
@@ -68,9 +71,10 @@ public class MainActivity extends AppCompatActivity {
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
         smiley = (ImageView) findViewById(R.id.activity_main_smiley);
         mainActivityLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
-
         //sharePreference
         sharedPreferences = getPreferences(MODE_PRIVATE);
+        //mood list
+        moodList = new MoodList();
         //swipe initialization
         swipeGesture = new SwipeDetector(MainActivity.this);
 
@@ -83,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //start history activity on click
                 Intent historyActivity = new Intent(MainActivity.this, HistoryActivity.class);
+                //send data to intend
+                historyActivity.putExtra("moodList",  moodList);
                 startActivity(historyActivity);
             }
         });
@@ -99,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSwipeUp() {
-        index--;
+        index++;
         setMood(index);
     }
 
     public void onSwipeDown() {
-        index++;
+        index--;
         setMood(index);
 
     }
@@ -155,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
                 if (picturelist[i].getMoodColor() == currentMood.getMoodColor()) {
                     setMood(i);
                 }
-
             }
         } else {
             //set current mood
             currentMood = new MoodItem(picturelist[3].getImageRessource(), picturelist[3].getMoodColor(),"");
             setMood(3);
+            saveMoodToList(currentMood);
         }
     }
     @Override
@@ -171,8 +177,13 @@ public class MainActivity extends AppCompatActivity {
         currentMood.setMoodColor(picturelist[index].getMoodColor());
         //serialize currentmood
         sharedPreferences.edit().putString("currentMood", gson.toJson(currentMood)).apply();
+        saveMoodToList(currentMood);
         }
 
+    private void saveMoodToList(MoodItem moodItem) {
+        moodList.addMood(moodItem);
+        sharedPreferences.edit().putString("moodList", gson.toJson(moodList)).apply();
+            }
 
     //method to route touchevent to swipedetector
     @Override

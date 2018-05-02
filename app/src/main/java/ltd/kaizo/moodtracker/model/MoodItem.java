@@ -41,4 +41,5 @@ public class MoodItem implements Serializable{
     public void setComment(String comment) {
         this.comment = comment;
     }
+
 }

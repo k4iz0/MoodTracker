@@ -5,17 +5,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.model.MoodItem;
+import ltd.kaizo.moodtracker.model.MoodList;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.RecycleViewHolder> {
-    private ArrayList<MoodItem> mSmileyList;
+    private MoodList smileyHistory;
 
-    public RecycleViewAdapter(ArrayList<MoodItem> smiley) {
-        mSmileyList = smiley;
+    public RecycleViewAdapter(MoodList smileyHistory) {
+        this.smileyHistory = smileyHistory;
     }
 
     @NonNull
@@ -27,23 +32,43 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecycleViewHolder holder, int position) {
-        MoodItem currentItem = mSmileyList.get(position);
-        holder.mImageView.setImageResource(currentItem.getImageRessource());
+    public void onBindViewHolder(@NonNull final RecycleViewHolder holder, int position) {
+        final MoodItem currentItem = smileyHistory.getMoodItem(position);
+        holder.itemList.setBackgroundColor(currentItem.getMoodColor());
+        holder.itemList.setText(currentItem.getComment());
+        //if there's no comment hide the button
+        if (currentItem.getComment() != null) {
+
+            holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(), currentItem.getComment(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            holder.commentBtn.setVisibility(View.INVISIBLE);
+        }
+
 
     }
 
     @Override
     public int getItemCount() {
-        return mSmileyList.size();
+        if (smileyHistory.getSize() > 0) {
+        return smileyHistory.getSize();
+        }
+        else return 0;
     }
 
     public static class RecycleViewHolder extends RecyclerView.ViewHolder {
-        public ImageView mImageView;
+        public TextView itemList;
+        public ImageButton commentBtn;
 
         public RecycleViewHolder(View itemView) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.activity_main_smiley);
+            itemList = (TextView) itemView.findViewById(R.id.activity_history_item_list_textview);
+            commentBtn = (ImageButton) itemView.findViewById(R.id.activity_history_item_list_comment_btn);
+
 
         }
     }
