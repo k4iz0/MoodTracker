@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
     //assign picture and background color into arraylist
     private void configurelist() {
         picturelist = new MoodItem[5];
-        picturelist[0] = new MoodItem(0,R.color.faded_red, R.drawable.smiley_sad);
-        picturelist[1] = new MoodItem(1,R.color.warm_grey, R.drawable.smiley_disappointed);
-        picturelist[2] = new MoodItem(2,R.color.cornflower_blue_65, R.drawable.smiley_normal);
-        picturelist[3] = new MoodItem(3,R.color.light_sage, R.drawable.smiley_happy);
-        picturelist[4] = new MoodItem(4,R.color.banana_yellow, R.drawable.smiley_super_happy);
+        picturelist[0] = new MoodItem(0, R.color.faded_red, R.drawable.smiley_sad);
+        picturelist[1] = new MoodItem(1, R.color.warm_grey, R.drawable.smiley_disappointed);
+        picturelist[2] = new MoodItem(2, R.color.cornflower_blue_65, R.drawable.smiley_normal);
+        picturelist[3] = new MoodItem(3, R.color.light_sage, R.drawable.smiley_happy);
+        picturelist[4] = new MoodItem(4, R.color.banana_yellow, R.drawable.smiley_super_happy);
     }
 
     //serialize ,  link widget & initialize variable
@@ -107,24 +107,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSwipeUp() {
-        index++;
-        setMood(index);
+        setMood(setIndexRange("up"));
     }
 
     public void onSwipeDown() {
-        index--;
-        setMood(index);
+        setMood(setIndexRange("down"));
 
+    }
+//method to check if the index is in range
+    private int setIndexRange(String direction) {
+        if (direction.equals("up") && index < picturelist.length - 1) {
+            index++;
+        } else if (direction.equals("down") && index > 0) {
+            index--;
+        }
+        return index;
     }
 
     //method to set mood picture and background
     private void setMood(int index) {
-        //check if index is in range
-        if (index < 0) {
-            index = 0;
-        } else if (index > picturelist.length - 1) {
-            index = picturelist.length - 1;
-        }
+
         mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
         smiley.setImageResource(picturelist[index].getImageRessource());
 
@@ -159,11 +161,10 @@ public class MainActivity extends AppCompatActivity {
         //get mood of the day if there's one
         if (json != null) {
             currentMood = gson.fromJson(json, MoodItem.class);
-            Log.i("CURRENTMOOD", currentMood.toString());
+            setMood(currentMood.getIndex());
 
         } else {
             //set current mood
-            Log.i("DEFAUTMOOD", currentMood.toString());
             currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageRessource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
             setMood(DEFAULT_MOOD);
             saveMoodToList(currentMood);
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-       saveCurrentMood();
+        saveCurrentMood();
     }
 
 
@@ -188,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.edit().putString(CURRENT_MOOD_KEY, gson.toJson(currentMood)).apply();
         saveMoodToList(currentMood);
     }
+
     private void saveMoodToList(MoodItem moodItem) {
         moodList.addMood(moodItem);
         sharedPreferences.edit().putString(MOOD_LIST_KEY, gson.toJson(moodList)).apply();
