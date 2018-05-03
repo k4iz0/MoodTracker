@@ -8,38 +8,58 @@ import java.util.Date;
 
 
 public class MoodItem implements Serializable{
-    private int mImageRessource;
-    private int mMoodColor;
+    private int imageRessource;
+    private int index;
+    private int moodColor;
     private String comment;
     private String currentDate;
 
-    public MoodItem(int moodColor, int imageRessource) {
-        mImageRessource = imageRessource;
-        mMoodColor = moodColor;
-        setDate();
+    public MoodItem( int index, int moodColor, int imageRessource) {
+        this.imageRessource = imageRessource;
+        this.moodColor = moodColor;
+        this.index = index;
+        setCurrentDate();
     }
 
-    public MoodItem(int imageRessource, int moodColor, String comment) {
-        mImageRessource = imageRessource;
-        mMoodColor = moodColor;
+    public MoodItem( int index,int imageRessource, int moodColor, String comment) {
+        this.imageRessource = imageRessource;
+        this.index = index;
+        this.moodColor = moodColor;
         this.comment = comment;
-        setDate();
+        setCurrentDate();
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public String getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate() {
+        Date now = Calendar.getInstance().getTime();
+        this.currentDate = new SimpleDateFormat("dd-MM-yyyy").format(now);
     }
 
     public int getMoodColor() {
-        return mMoodColor;
+        return moodColor;
     }
 
     public void setMoodColor(int moodColor) {
-        mMoodColor = moodColor;
+        this.moodColor = moodColor;
     }
 
     public int getImageRessource() {
-        return mImageRessource;
+        return imageRessource;
     }
 
     public void setImageRessource(int imageRessource) {
-        mImageRessource = imageRessource;
+        this.imageRessource = imageRessource;
     }
 
     public String getComment() {
@@ -54,10 +74,14 @@ public class MoodItem implements Serializable{
         return currentDate;
     }
 
-    public void setDate() {
-        Date now = Calendar.getInstance().getTime();
-        this.currentDate = new SimpleDateFormat("dd-MM-yyyy").format(now);
-
+    @Override
+    public String toString() {
+        return "MoodItem{" +
+                "imageRessource=" + imageRessource +
+                ", index=" + index +
+                ", moodColor=" + moodColor +
+                ", comment='" + comment + '\'' +
+                ", currentDate='" + currentDate + '\'' +
+                '}';
     }
-
 }

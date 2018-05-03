@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">MoodTracker</string>
     <string name="smiley">smiley</string>
-    <string name="comment">comment</string>
+    <string name="comment">Comment</string>
     <string name="history">history</string>
     <string name="question">Tell me more about your mood !</string>
+    <string name="comment_save">comment saved !</string>
 
 
 </resources>

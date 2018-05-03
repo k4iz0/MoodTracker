@@ -35,7 +35,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull final RecycleViewHolder holder, int position) {
         final MoodItem currentItem = smileyHistory.getMoodItem(position);
         holder.itemList.setBackgroundColor(currentItem.getMoodColor());
-        holder.itemList.setText(currentItem.getComment()+" "+currentItem.getDate());
+        holder.itemList.setText(currentItem.getComment() + " " + currentItem.getDate());
         //if there's no comment hide the button
         if (currentItem.getComment() != null) {
 
@@ -54,10 +54,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public int getItemCount() {
-        if (smileyHistory.getSize() > 0) {
-        return smileyHistory.getSize();
+        if (smileyHistory == null) {
+            return 0;
+        } else if (smileyHistory.getSize() > 7) {
+            return 7;
+        } else {
+            return smileyHistory.getSize();
         }
-        else return 0;
     }
 
     public static class RecycleViewHolder extends RecyclerView.ViewHolder {

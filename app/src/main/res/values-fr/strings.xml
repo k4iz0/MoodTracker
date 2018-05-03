@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MoodTracker</string>
+    <string name="smiley">smiley</string>
+    <string name="comment">Commentaire</string>
+    <string name="history">historique</string>
+    <string name="question">Dites m\'en plus sur votre humeur! </string>
+    <string name="comment_save">commentaire enregistré !</string>
+
+
+</resources>

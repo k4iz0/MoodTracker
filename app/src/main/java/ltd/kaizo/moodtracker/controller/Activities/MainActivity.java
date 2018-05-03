@@ -18,11 +18,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
 import ltd.kaizo.moodtracker.model.MoodItem;
@@ -30,7 +25,7 @@ import ltd.kaizo.moodtracker.model.MoodList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MoodItem[] picturelist ;
+    private MoodItem[] picturelist;
     private ImageButton historyBtn;
     private ImageButton commentBtn;
     private ImageView smiley;
@@ -42,7 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private MoodList moodList;
     private String comment;
     private int index;
+    private final int DEFAULT_MOOD = 3;
+    private final String CURRENT_MOOD_KEY = "currentMood";
+    private final String MOOD_LIST_KEY = "moodList";
     private Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
     //assign picture and background color into arraylist
     private void configurelist() {
-        picturelist =  new MoodItem[5];
-        picturelist[0] = new MoodItem(R.color.faded_red, R.drawable.smiley_sad);
-        picturelist[1] = new MoodItem(R.color.warm_grey, R.drawable.smiley_disappointed);
-        picturelist[2] = new MoodItem(R.color.cornflower_blue_65, R.drawable.smiley_normal);
-        picturelist[3] = new MoodItem(R.color.light_sage, R.drawable.smiley_happy);
-        picturelist[4] = new MoodItem(R.color.banana_yellow, R.drawable.smiley_super_happy);
+        picturelist = new MoodItem[5];
+        picturelist[0] = new MoodItem(0,R.color.faded_red, R.drawable.smiley_sad);
+        picturelist[1] = new MoodItem(1,R.color.warm_grey, R.drawable.smiley_disappointed);
+        picturelist[2] = new MoodItem(2,R.color.cornflower_blue_65, R.drawable.smiley_normal);
+        picturelist[3] = new MoodItem(3,R.color.light_sage, R.drawable.smiley_happy);
+        picturelist[4] = new MoodItem(4,R.color.banana_yellow, R.drawable.smiley_super_happy);
     }
 
     //serialize ,  link widget & initialize variable
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 //start history activity on click
                 Intent historyActivity = new Intent(MainActivity.this, HistoryActivity.class);
                 //send data to intend
-                historyActivity.putExtra("moodList",  moodList);
+                historyActivity.putExtra(MOOD_LIST_KEY, moodList);
                 startActivity(historyActivity);
             }
         });
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         //check if index is in range
         if (index < 0) {
             index = 0;
-        } else if (index >picturelist.length-1) {
+        } else if (index > picturelist.length - 1) {
             index = picturelist.length - 1;
         }
         mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
@@ -135,14 +134,14 @@ public class MainActivity extends AppCompatActivity {
     private void openDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.layout_dialog)
-                .setTitle("Comment")
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.comment)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //end alertdialog if "cancel" is pressed
                     }
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //save comment  into sharePreference
@@ -150,50 +149,55 @@ public class MainActivity extends AppCompatActivity {
                         commentEditText = (EditText) d.findViewById(R.id.activity_main_dialog_comment);
                         comment = commentEditText.getText().toString();
                         currentMood.setComment(comment);
-                        Toast.makeText(MainActivity.this, "comment saved !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.comment_save, Toast.LENGTH_SHORT).show();
                     }
                 }).show();
     }
 
     private void checkDailyMood() {
-        String json = sharedPreferences.getString("currentMood", null);
+        String json = sharedPreferences.getString(CURRENT_MOOD_KEY, null);
         //get mood of the day if there's one
         if (json != null) {
             currentMood = gson.fromJson(json, MoodItem.class);
-            for (int i=0; i<picturelist.length;i++) {
-                if (picturelist[i].getMoodColor() == currentMood.getMoodColor()) {
-                    setMood(i);
-                }
-            }
+            Log.i("CURRENTMOOD", currentMood.toString());
+
         } else {
             //set current mood
-            currentMood = new MoodItem(picturelist[3].getImageRessource(), picturelist[3].getMoodColor(),"");
-            setMood(3);
+            Log.i("DEFAUTMOOD", currentMood.toString());
+            currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageRessource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
+            setMood(DEFAULT_MOOD);
             saveMoodToList(currentMood);
         }
     }
+
+
     @Override
     protected void onPause() {
         super.onPause();
+       saveCurrentMood();
+    }
+
+
+    private void saveCurrentMood() {
         //save currentMood
         currentMood.setImageRessource(picturelist[index].getImageRessource());
         currentMood.setMoodColor(picturelist[index].getMoodColor());
+        currentMood.setIndex(index);
+        currentMood.setCurrentDate();
         //serialize currentmood
-        sharedPreferences.edit().putString("currentMood", gson.toJson(currentMood)).apply();
+        sharedPreferences.edit().putString(CURRENT_MOOD_KEY, gson.toJson(currentMood)).apply();
         saveMoodToList(currentMood);
-        }
-
+    }
     private void saveMoodToList(MoodItem moodItem) {
         moodList.addMood(moodItem);
-        sharedPreferences.edit().putString("moodList", gson.toJson(moodList)).apply();
-            }
+        sharedPreferences.edit().putString(MOOD_LIST_KEY, gson.toJson(moodList)).apply();
+    }
 
     //method to route touchevent to swipedetector
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return swipeGesture.onTouchEvent(event);
     }
-
 
 
 }
