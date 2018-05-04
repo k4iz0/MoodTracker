@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.configureView();
         this.configurelist();
+        this.configureHistoryList();
         this.checkDailyMood();
 
         this.configureHistoryBtn();
@@ -75,13 +76,21 @@ public class MainActivity extends AppCompatActivity {
         mainActivityLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
         //sharePreference
         sharedPreferences = getPreferences(MODE_PRIVATE);
-        //mood list
-        moodList = new MoodList();
         //swipe initialization
         swipeGesture = new SwipeDetector(MainActivity.this);
 
     }
 
+    private void configureHistoryList() {
+        String listMoodJson = sharedPreferences.getString(MOOD_LIST_KEY, null);
+        if (listMoodJson != null) {
+            moodList = gson.fromJson(listMoodJson, MoodList.class);
+        } else {
+            moodList = new MoodList();
+        }
+
+
+    }
 
     private void configureHistoryBtn() {
         historyBtn.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     public void onSwipeUp() {
         setMood(setIndexRange("up"));
     }
@@ -114,7 +124,8 @@ public class MainActivity extends AppCompatActivity {
         setMood(setIndexRange("down"));
 
     }
-//method to check if the index is in range
+
+    //method to check if the index is in range
     private int setIndexRange(String direction) {
         if (direction.equals("up") && index < picturelist.length - 1) {
             index++;
@@ -129,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
         smiley.setImageResource(picturelist[index].getImageRessource());
+        currentMood.setComment("");
 
     }
 
@@ -157,11 +169,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkDailyMood() {
-        String json = sharedPreferences.getString(CURRENT_MOOD_KEY, null);
+        String currentMoodJson = sharedPreferences.getString(CURRENT_MOOD_KEY, null);
+
         //get mood of the day if there's one
-        if (json != null) {
-            currentMood = gson.fromJson(json, MoodItem.class);
+        if (currentMoodJson != null) {
+            currentMood = gson.fromJson(currentMoodJson, MoodItem.class);
+
             setMood(currentMood.getIndex());
+            index = currentMood.getIndex();
 
         } else {
             //set current mood
@@ -191,9 +206,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveMoodToList(MoodItem moodItem) {
-        moodList.addMood(moodItem);
+
+        if (moodList.getSize() > 0) {
+
+            for (MoodItem mood : moodList.getMoodList()) {
+                //if we find a mood with the same date
+                if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
+                    moodList.removeMood(mood);
+                }
+            }
+            moodList.addMood(moodItem);
+        } else {
+
+            moodList.addMood(moodItem);
+        }
         sharedPreferences.edit().putString(MOOD_LIST_KEY, gson.toJson(moodList)).apply();
     }
+
 
     //method to route touchevent to swipedetector
     @Override

@@ -70,18 +70,4 @@ public class MoodItem implements Serializable{
         this.comment = comment;
     }
 
-    public String getDate() {
-        return currentDate;
-    }
-
-    @Override
-    public String toString() {
-        return "MoodItem{" +
-                "imageRessource=" + imageRessource +
-                ", index=" + index +
-                ", moodColor=" + moodColor +
-                ", comment='" + comment + '\'' +
-                ", currentDate='" + currentDate + '\'' +
-                '}';
-    }
 }

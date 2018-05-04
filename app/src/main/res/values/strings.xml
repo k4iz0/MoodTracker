@@ -4,7 +4,11 @@
     <string name="comment">Comment</string>
     <string name="history">history</string>
     <string name="question">Tell me more about your mood !</string>
-    <string name="comment_save">comment saved !</string>
+    <string name="yesterday">yesterday</string>
+    <string name="before_yesterday">before yesterday</string>
+    <string name="month">month</string>
+    <string name="week">week</string>
+    <string name="day">day</string>
 
 
 </resources>

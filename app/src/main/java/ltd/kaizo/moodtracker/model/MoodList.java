@@ -7,6 +7,7 @@ import java.util.List;
 public class MoodList implements Serializable{
     private List<MoodItem> moodList;
 
+
     public MoodList() {
         this.moodList = new ArrayList();
     }
@@ -15,6 +16,13 @@ public class MoodList implements Serializable{
         this.moodList.add(mood);
     }
 
+    public void removeMood(MoodItem mood) {
+        this.moodList.remove(mood);
+    }
+
+    public void setMood(int index, MoodItem mood) {
+        this.moodList.set(index, mood);
+    }
     public List<MoodItem> getMoodList() {
         return moodList;
     }

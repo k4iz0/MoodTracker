@@ -5,6 +5,12 @@
     <string name="history">historique</string>
     <string name="question">Dites m\'en plus sur votre humeur! </string>
     <string name="comment_save">commentaire enregistré !</string>
+    <string name="yesterday">hier</string>
+    <string name="before_yesterday">avant hier</string>
+    <string name="ago">il y a</string>
+    <string name="month">mois</string>
+    <string name="week">semaine</string>
+    <string name="day">jour</string>
 
 
 </resources>
