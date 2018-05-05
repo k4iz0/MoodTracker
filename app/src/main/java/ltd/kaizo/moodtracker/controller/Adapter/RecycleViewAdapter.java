@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull final RecycleViewHolder holder, int position) {
         final MoodItem currentItem = smileyHistory.getMoodItem(position);
         holder.itemList.setBackgroundResource(currentItem.getMoodColor());
-        holder.itemList.setText(currentItem.getCurrentDate());
         //if there's no comment hide the button
         if (currentItem.getComment().equalsIgnoreCase("")) {
             holder.commentBtn.setVisibility(View.INVISIBLE);
@@ -58,19 +58,42 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             });
         }
         int diffDay = displayDateText(currentItem.getCurrentDate());
+        if (diffDay == 0) {
+            holder.recycleViewlayout.setVisibility(View.INVISIBLE);
+        }
+        String str = "";
         if (diffDay == 1) {
-//            return R.string.yesterday;
+            holder.itemList.setText(R.string.yesterday);
         } else if (diffDay == 2) {
-//            return R.string.before_yesterday;
-        } else if (diffDay > 6 && diffDay <=31) {
+            holder.itemList.setText(R.string.before_yesterday);
+        } else if (diffDay > 6 && diffDay <= 31) {
             if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
-//                return R.string.;
 
+                str = holder.itemList.getContext().getString(R.string.ago) + " " + holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.week);
+                holder.itemList.setText(str);
+
+            } else {
+                str = holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.week) + " " + holder.itemList.getContext().getString(R.string.ago);
+                holder.itemList.setText(str);
             }
         } else if (diffDay > 31) {
-//             "il y a plus d'un mois";
+            if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
+                str = holder.itemList.getContext().getString(R.string.ago) + " " + holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.month);
+                holder.itemList.setText(str);
+
+            } else {
+                str = holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.month) + " " + holder.itemList.getContext().getString(R.string.ago);
+                holder.itemList.setText(str);
+            }
         } else {
-//             "il y a " + diffDay + " jours";
+            if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
+                str =  holder.itemList.getContext().getString(R.string.ago) + " " + diffDay + " " +  holder.itemList.getContext().getString(R.string.days);
+                holder.itemList.setText(str);
+
+            } else {
+                str = diffDay + " " +  holder.itemList.getContext().getString(R.string.days) + " " +  holder.itemList.getContext().getString(R.string.ago);
+                holder.itemList.setText(str);
+            }
         }
 
     }
@@ -98,11 +121,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public static class RecycleViewHolder extends RecyclerView.ViewHolder {
         public TextView itemList;
         public ImageButton commentBtn;
+        public RelativeLayout recycleViewlayout;
 
         public RecycleViewHolder(View itemView) {
             super(itemView);
             itemList = (TextView) itemView.findViewById(R.id.activity_history_item_list_textview);
             commentBtn = (ImageButton) itemView.findViewById(R.id.activity_history_item_list_comment_btn);
+            recycleViewlayout = (RelativeLayout) itemView.findViewById(R.id.recycleView_layout);
         }
     }
 

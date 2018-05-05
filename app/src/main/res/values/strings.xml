@@ -6,9 +6,12 @@
     <string name="question">Tell me more about your mood !</string>
     <string name="yesterday">yesterday</string>
     <string name="before_yesterday">before yesterday</string>
+    <string name="ago">ago</string>
+    <string name="more">more than a</string>
     <string name="month">month</string>
     <string name="week">week</string>
     <string name="day">day</string>
+    <string name="days">days</string>
 
 
 </resources>
