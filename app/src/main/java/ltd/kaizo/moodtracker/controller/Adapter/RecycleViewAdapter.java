@@ -1,34 +1,38 @@
 package ltd.kaizo.moodtracker.controller.Adapter;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import ltd.kaizo.moodtracker.R;
-import ltd.kaizo.moodtracker.controller.Activities.HistoryActivity;
-import ltd.kaizo.moodtracker.controller.Activities.MainActivity;
 import ltd.kaizo.moodtracker.model.MoodItem;
 import ltd.kaizo.moodtracker.model.MoodList;
 
+/**
+ * The type Recycle view adapter.
+ */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.RecycleViewHolder> {
     private MoodList smileyHistory;
     private String dateNow;
+    private final int HISTORY_LIMIT = 7;
 
+    /**
+     * Instantiates a new Recycle view adapter
+     * with an arraylist of mood
+     *
+     * @param smileyHistory the arraylist of mood
+     */
     public RecycleViewAdapter(MoodList smileyHistory) {
         this.smileyHistory = smileyHistory;
     }
@@ -57,16 +61,20 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 }
             });
         }
-        int diffDay = displayDateText(currentItem.getCurrentDate());
+        //get the difference of day
+        int diffDay = setDiffDay(currentItem.getCurrentDate());
+        //hide the mood of the day
         if (diffDay == 0) {
             holder.recycleViewlayout.setVisibility(View.INVISIBLE);
         }
-        String str = "";
+
+        String str;
         if (diffDay == 1) {
             holder.itemList.setText(R.string.yesterday);
         } else if (diffDay == 2) {
             holder.itemList.setText(R.string.before_yesterday);
         } else if (diffDay > 6 && diffDay <= 31) {
+            //more than a week
             if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
 
                 str = holder.itemList.getContext().getString(R.string.ago) + " " + holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.week);
@@ -77,6 +85,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 holder.itemList.setText(str);
             }
         } else if (diffDay > 31) {
+            //more than a month
             if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
                 str = holder.itemList.getContext().getString(R.string.ago) + " " + holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.month);
                 holder.itemList.setText(str);
@@ -87,29 +96,40 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             }
         } else {
             if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
-                str =  holder.itemList.getContext().getString(R.string.ago) + " " + diffDay + " " +  holder.itemList.getContext().getString(R.string.days);
+                str = holder.itemList.getContext().getString(R.string.ago) + " " + diffDay + " " + holder.itemList.getContext().getString(R.string.days);
                 holder.itemList.setText(str);
 
             } else {
-                str = diffDay + " " +  holder.itemList.getContext().getString(R.string.days) + " " +  holder.itemList.getContext().getString(R.string.ago);
+                str = diffDay + " " + holder.itemList.getContext().getString(R.string.days) + " " + holder.itemList.getContext().getString(R.string.ago);
                 holder.itemList.setText(str);
             }
         }
 
     }
 
+    /**
+     * limit the number of item to the limit fix by variable HISTORY_LIMIT
+     *
+     * @return size of recycleView list
+     */
     @Override
     public int getItemCount() {
         if (smileyHistory == null) {
             return 0;
-        } else if (smileyHistory.getSize() > 7) {
-            return 7;
+        } else if (smileyHistory.getSize() > HISTORY_LIMIT) {
+            return HISTORY_LIMIT;
         } else {
             return smileyHistory.getSize();
         }
     }
 
-    private int displayDateText(String date) {
+    /**
+     * soustract the date of the item to the current date to return a number of days
+     *
+     * @param date simpleDateFormat dd-MM-YY
+     * @return the number of days between 2 dates
+     */
+    private int setDiffDay(String date) {
         Date now = Calendar.getInstance().getTime();
         dateNow = new SimpleDateFormat("dd-MM-yyyy").format(now);
         DateManager currentDate = new DateManager(dateNow);
@@ -118,11 +138,28 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return diffDay;
     }
 
+    /**
+     * The type Recycle view holder.
+     */
     public static class RecycleViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * The Item list.
+         */
         public TextView itemList;
+        /**
+         * The Comment btn.
+         */
         public ImageButton commentBtn;
+        /**
+         * The Recycle viewlayout.
+         */
         public RelativeLayout recycleViewlayout;
 
+        /**
+         * Instantiates a new Recycle view holder.
+         *
+         * @param itemView the item view
+         */
         public RecycleViewHolder(View itemView) {
             super(itemView);
             itemList = (TextView) itemView.findViewById(R.id.activity_history_item_list_textview);

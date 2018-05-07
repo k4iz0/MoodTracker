@@ -6,9 +6,18 @@ import android.view.MotionEvent;
 
 import ltd.kaizo.moodtracker.controller.Activities.MainActivity;
 
+/**
+ * The type Swipe detector.
+ * Class to detect swipe gesture
+ */
 public class SwipeDetector extends GestureDetector {
 
 
+    /**
+     * Instantiates a new Swipe detector.
+     *
+     * @param context the context
+     */
     public SwipeDetector(final MainActivity context) {
         super(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -22,19 +31,19 @@ public class SwipeDetector extends GestureDetector {
 
                     if (deltaX < 0) {
                         //if we swipe to the left
-                                result =  true;
+                        result = true;
                     } else {
                         //we swipe on right
-                                  result =  true;
+                        result = true;
                     }
                 } else if (deltaY < 0) {
                     //swipe up
-                       context.onSwipeUp();
-                    result =  true;
+                    context.onSwipeUp();
+                    result = true;
                 } else {
                     //swipe down
-                         context.onSwipeDown();
-                    result =  true;
+                    context.onSwipeDown();
+                    result = true;
                 }
                 return result;
             }

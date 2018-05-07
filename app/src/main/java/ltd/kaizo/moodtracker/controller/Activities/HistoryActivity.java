@@ -11,6 +11,9 @@ import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.RecycleViewAdapter;
 import ltd.kaizo.moodtracker.model.MoodList;
 
+/**
+ * The  History activity.
+ */
 public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -27,10 +30,10 @@ public class HistoryActivity extends AppCompatActivity {
         this.configureRecycleView();
     }
 
-//recycleView configuration
+    //recycleView configuration
     private void configureRecycleView() {
         recyclerView = findViewById(R.id.activity_history_recycleview);
-        layoutManager =  new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         adapter = new RecycleViewAdapter(moodList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
