@@ -48,6 +48,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @Override
     public void onBindViewHolder(@NonNull final RecycleViewHolder holder, int position) {
         final MoodItem currentItem = smileyHistory.getMoodItem(position);
+        //setting up the background color
         holder.itemList.setBackgroundResource(currentItem.getMoodColor());
         //if there's no comment hide the button
         if (currentItem.getComment().equalsIgnoreCase("")) {

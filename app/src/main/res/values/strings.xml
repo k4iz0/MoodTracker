@@ -12,6 +12,15 @@
     <string name="week">week</string>
     <string name="day">day</string>
     <string name="days">days</string>
+    <string name="share">share</string>
+    <string name="shareSubject">My mood of the day</string>
+    <string name="shareVia">Share via</string>
+    <string name="feeling">Today, I\'m feeling </string>
+    <string name="sad">sad :( </string>
+    <string name="normal">normal :| </string>
+    <string name="happy">happy :) </string>
+    <string name="great">great :D </string>
+    <string name="disappointed">disappointed :/</string>
 
 
 </resources>

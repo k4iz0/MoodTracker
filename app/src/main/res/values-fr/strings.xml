@@ -13,6 +13,14 @@
     <string name="week">semaine</string>
     <string name="day">jour</string>
     <string name="days">jours</string>
-
+    <string name="share">partager</string>
+    <string name="shareSubject">Mon humeur du jour</string>
+    <string name="shareVia">Partager via</string>
+    <string name="feeling">Aujourd\'hui, je me sens </string>
+    <string name="sad">de très mauvaise humeur :( </string>
+    <string name="normal">d\'humeur normale :| </string>
+    <string name="happy">de bonne humeur :) </string>
+    <string name="great">de super bonne humeur :D </string>
+    <string name="disappointed">déçu :/</string>
 
 </resources>

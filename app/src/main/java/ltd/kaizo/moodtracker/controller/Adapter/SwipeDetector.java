@@ -12,7 +12,6 @@ import ltd.kaizo.moodtracker.controller.Activities.MainActivity;
  */
 public class SwipeDetector extends GestureDetector {
 
-
     /**
      * Instantiates a new Swipe detector.
      *

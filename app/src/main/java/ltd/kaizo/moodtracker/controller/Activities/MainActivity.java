@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private final String CURRENT_MOOD_KEY = "currentMood";
     private final String MOOD_LIST_KEY = "moodList";
     private Gson gson = new Gson();
+    private ImageButton shareButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         this.checkDailyMood();
         this.configureHistoryBtn();
         this.configureCommentBtn();
+        this.configureShareButton();
 
     }
 
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         commentBtn = (ImageButton) findViewById(R.id.activity_main_comment_btn);
         smiley = (ImageView) findViewById(R.id.activity_main_smiley);
         mainActivityLayout = (RelativeLayout) findViewById(R.id.activity_main_layout);
+        shareButton = (ImageButton) findViewById(R.id.activity_main_share_btn);
         //sharePreference
         sharedPreferences = getPreferences(MODE_PRIVATE);
         //swipe initialization
@@ -132,6 +136,67 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * set on click listener on share button
+     */
+    private void configureShareButton() {
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("text/plain");
+                share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.shareSubject));
+                share.putExtra(Intent.EXTRA_TEXT, setShareString());
+                startActivity(Intent.createChooser(share, getString(R.string.shareVia)));
+            }
+        });
+    }
+
+    /**
+     * function to return a String base on the mood of the day
+     * for the share button
+     *
+     * @return str String to send to the share's Intent
+     */
+    private String setShareString() {
+        //i'm feeling
+        String str = getString(R.string.feeling)+" ";
+        switch (currentMood.getIndex()) {
+            case 0:
+                //sad
+                str += getString(R.string.sad);
+                break;
+            case 1:
+                //disappointed
+                str += getString(R.string.disappointed);
+                break;
+            case 2:
+                //normal
+                str += getString(R.string.normal);
+                break;
+            case 3:
+                //happy
+                str += getString(R.string.happy);
+                break;
+            case 4:
+                //great
+                str += getString(R.string.great);
+                break;
+            default:
+                //happy
+                str += getString(R.string.happy);
+
+
+        }
+        //if there's no comment
+        if (currentMood.getComment().equalsIgnoreCase("")) {
+            return str;
+        } else {
+            str += "\n " + currentMood.getComment();
+            return str;
+
+        }
+    }
 
     /**
      * On swipe up
