@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoodTracker</string>
+    <string name="app_name">Mood Tracker</string>
     <string name="smiley">smiley</string>
     <string name="comment">Commentaire</string>
     <string name="history">historique</string>
