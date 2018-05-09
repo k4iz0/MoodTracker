@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * initialize list of mood (moodList) by loading from sharedpreference's file
-     * or setting up a new list if the file's  empty
+     * or setting up a new list if the file's empty
      */
     private void configureHistoryList() {
         String listMoodJson = sharedPreferences.getString(MOOD_LIST_KEY, null);
@@ -113,11 +113,15 @@ public class MainActivity extends AppCompatActivity {
         historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //start history activity on click
-                Intent historyActivity = new Intent(MainActivity.this, HistoryActivity.class);
-                //send data to intend
-                historyActivity.putExtra(MOOD_LIST_KEY, moodList);
-                startActivity(historyActivity);
+                //start history activity on click if there's an history
+                if (moodList.getSize() > 1) {
+                    Intent historyActivity = new Intent(MainActivity.this, HistoryActivity.class);
+                    //send data to intend
+                    historyActivity.putExtra(MOOD_LIST_KEY, moodList);
+                    startActivity(historyActivity);
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.moodHistoryEmpty, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * function to return a String base on the mood of the day
-     * for the share button
+     * for the share button function
      *
      * @return str String to send to the share's Intent
      */
@@ -192,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentMood.getComment().equalsIgnoreCase("")) {
             return str;
         } else {
+            //else include it
             str += "\n " + currentMood.getComment();
             return str;
 
@@ -204,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onSwipeUp() {
         setMood(setIndexRange("up"));
+        saveCurrentMood();
     }
 
     /**
@@ -212,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onSwipeDown() {
         setMood(setIndexRange("down"));
+        saveCurrentMood();
 
     }
 
@@ -232,14 +239,12 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * method to set mood picture and background
-     *
      * @param index the mood's position in the array picturelist
      */
     private void setMood(int index) {
 
         mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
         smiley.setImageResource(picturelist[index].getImageResource());
-        currentMood.setComment("");
 
     }
 
@@ -286,7 +291,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //set current mood to default
             currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageResource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
-            setMood(DEFAULT_MOOD);
+            index = DEFAULT_MOOD;
+            setMood(index);
             saveMoodToList(currentMood);
         }
     }
@@ -342,8 +348,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * method to route touchevent to swipedetector
      *
-     * @param event
-     * @return
+     * @param event MotionEvent
+     * @return the swipeGesture onTouch method
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {

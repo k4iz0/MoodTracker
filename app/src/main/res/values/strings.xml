@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoodTracker</string>
+    <string name="app_name">Mood Tracker</string>
     <string name="smiley">smiley</string>
     <string name="comment">Comment</string>
     <string name="history">history</string>
@@ -21,6 +21,7 @@
     <string name="happy">happy :) </string>
     <string name="great">great :D </string>
     <string name="disappointed">disappointed :/</string>
+    <string name="moodHistoryEmpty">no mood saved yet !</string>
 
 
 </resources>
