@@ -58,16 +58,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.commentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), currentItem.getComment(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(v.getContext(), currentItem.getComment(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
         //get the difference of day
         int diffDay = setDiffDay(currentItem.getCurrentDate());
         //hide the mood of the day
-        if (diffDay == 0) {
-            holder.recycleViewlayout.setVisibility(View.INVISIBLE);
-        }
+//        if (diffDay == 0) {
+//            holder.recycleViewlayout.setLayoutParams(new RelativeLayout.LayoutParams(0,0));
+//        }
 
         String str;
         if (diffDay == 1) {

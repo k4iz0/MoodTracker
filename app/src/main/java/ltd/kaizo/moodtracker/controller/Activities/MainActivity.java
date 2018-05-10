@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.SwipeDetector;
@@ -44,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private final String MOOD_LIST_KEY = "moodList";
     private Gson gson = new Gson();
     private ImageButton shareButton;
+    private Boolean today = false;
+    private String currentDate;
 
 
     @Override
@@ -164,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private String setShareString() {
         //i'm feeling
-        String str = getString(R.string.feeling)+" ";
+        String str = getString(R.string.feeling) + " ";
         switch (currentMood.getIndex()) {
             case 0:
                 //sad
@@ -239,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * method to set mood picture and background
+     *
      * @param index the mood's position in the array picturelist
      */
     private void setMood(int index) {
@@ -284,9 +292,16 @@ public class MainActivity extends AppCompatActivity {
         //get mood of the day if there's one
         if (currentMoodJson != null) {
             currentMood = gson.fromJson(currentMoodJson, MoodItem.class);
-
-            setMood(currentMood.getIndex());
-            index = currentMood.getIndex();
+            if (setToday()) {
+                setMood(currentMood.getIndex());
+                index = currentMood.getIndex();
+            } else {
+                //set current mood to default
+                currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageResource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
+                index = DEFAULT_MOOD;
+                setMood(index);
+                saveMoodToList(currentMood);
+            }
 
         } else {
             //set current mood to default
@@ -328,22 +343,37 @@ public class MainActivity extends AppCompatActivity {
      */
     private void saveMoodToList(MoodItem moodItem) {
 
-        if (moodList.getSize() > 0) {
+        if (moodList.getSize() > 0 && !setToday()) {
 
-            for (MoodItem mood : moodList.getMoodList()) {
-                //if we find a mood with the same date
-                if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
-                    moodList.removeMood(mood);
-                }
-            }
+//            for (MoodItem mood : moodList.getMoodList()) {
+//                //if we find a mood with the same date
+//                if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
+//                    moodList.removeMood(mood);
+//                }
+//            }
             moodList.addMood(moodItem);
-        } else {
-
-            moodList.addMood(moodItem);
+//        } else {
+//
+//            moodList.addMood(moodItem);
         }
         sharedPreferences.edit().putString(MOOD_LIST_KEY, gson.toJson(moodList)).apply();
     }
 
+    /**
+     * function to set today's value by comparing today's date to the currentMood 's date
+     *
+     * @return today the bollean value of today
+     */
+    private Boolean setToday() {
+        Date now = Calendar.getInstance().getTime();
+        currentDate = new SimpleDateFormat("dd-MM-yyyy").format(now);
+        if (currentDate.equalsIgnoreCase(currentMood.getCurrentDate())) {
+            today = true;
+        } else {
+            today = false;
+        }
+        return today;
+    }
 
     /**
      * method to route touchevent to swipedetector

@@ -7,8 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import java.util.Collections;
+
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.RecycleViewAdapter;
+import ltd.kaizo.moodtracker.model.MoodItem;
 import ltd.kaizo.moodtracker.model.MoodList;
 
 /**
@@ -27,6 +30,7 @@ public class HistoryActivity extends AppCompatActivity {
         //get back data from main activity
         Intent intent = getIntent();
         moodList = (MoodList) intent.getSerializableExtra("moodList");
+//        Collections.sort(moodList.getMoodList(), Collections.reverseOrder(moodList.compareToByDate()));
         this.configureRecycleView();
     }
 

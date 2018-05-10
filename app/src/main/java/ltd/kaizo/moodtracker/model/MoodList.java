@@ -2,6 +2,7 @@ package ltd.kaizo.moodtracker.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -72,5 +73,17 @@ public class MoodList implements Serializable {
      */
     public int getSize() {
         return moodList.size();
+    }
+    public Comparator<MoodItem> compareToByDate() {
+        Comparator comp = new Comparator<MoodItem>() {
+            @Override
+            public int compare(MoodItem o1, MoodItem o2) {
+                return o1.getCurrentDate().compareTo(o2.getCurrentDate());
+            }
+
+
+
+        };
+        return comp;
     }
 }

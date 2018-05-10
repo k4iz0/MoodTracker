@@ -22,6 +22,6 @@
     <string name="happy">de bonne humeur :) </string>
     <string name="great">de super bonne humeur :D </string>
     <string name="disappointed">déçu :/</string>
-    <string name="moodHistoryEmpty">aucunes humeurs enregistrées</string>
+    <string name="moodHistoryEmpty">aucune humeur enregistrée</string>
 
 </resources>
