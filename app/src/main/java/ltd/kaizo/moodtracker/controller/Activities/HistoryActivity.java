@@ -18,9 +18,21 @@ import ltd.kaizo.moodtracker.model.MoodList;
  * The  History activity.
  */
 public class HistoryActivity extends AppCompatActivity {
+    /**
+     * The Recycler view.
+     */
     private RecyclerView recyclerView;
+    /**
+     * The Adapter.
+     */
     private RecyclerView.Adapter adapter;
+    /**
+     * The Layout manager.
+     */
     private RecyclerView.LayoutManager layoutManager;
+    /**
+     * The Mood list.
+     */
     private MoodList moodList;
 
     @Override
@@ -30,11 +42,13 @@ public class HistoryActivity extends AppCompatActivity {
         //get back data from main activity
         Intent intent = getIntent();
         moodList = (MoodList) intent.getSerializableExtra("moodList");
-//        Collections.sort(moodList.getMoodList(), Collections.reverseOrder(moodList.compareToByDate()));
+        Collections.sort(moodList.getMoodList(), Collections.reverseOrder(moodList.compareToByDate()));
         this.configureRecycleView();
     }
 
-    //recycleView configuration
+    /**
+     * Configure recycle view.
+     */
     private void configureRecycleView() {
         recyclerView = findViewById(R.id.activity_history_recycleview);
         layoutManager = new LinearLayoutManager(this);

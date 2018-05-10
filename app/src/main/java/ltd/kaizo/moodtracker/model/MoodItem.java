@@ -11,10 +11,25 @@ import java.util.Date;
  * The type Mood item.
  */
 public class MoodItem implements Serializable {
+    /**
+     * The Image resource.
+     */
     private int imageResource;
+    /**
+     * The Index.
+     */
     private int index;
+    /**
+     * The Mood color.
+     */
     private int moodColor;
+    /**
+     * The Comment.
+     */
     private String comment;
+    /**
+     * The Current date.
+     */
     private String currentDate;
 
     /**

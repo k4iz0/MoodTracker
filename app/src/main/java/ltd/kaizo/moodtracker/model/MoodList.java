@@ -9,6 +9,9 @@ import java.util.List;
  * The type Mood list.
  */
 public class MoodList implements Serializable {
+    /**
+     * The Mood list.
+     */
     private List<MoodItem> moodList;
 
 
@@ -74,13 +77,18 @@ public class MoodList implements Serializable {
     public int getSize() {
         return moodList.size();
     }
+
+    /**
+     * Compare to by date comparator.
+     *
+     * @return the comparator
+     */
     public Comparator<MoodItem> compareToByDate() {
         Comparator comp = new Comparator<MoodItem>() {
             @Override
             public int compare(MoodItem o1, MoodItem o2) {
                 return o1.getCurrentDate().compareTo(o2.getCurrentDate());
             }
-
 
 
         };

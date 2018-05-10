@@ -7,12 +7,6 @@
     <string name="comment_save">commentaire enregistré !</string>
     <string name="yesterday">hier</string>
     <string name="before_yesterday">avant hier</string>
-    <string name="ago">il y a</string>
-    <string name="more">plus d\'une</string>
-    <string name="month">mois</string>
-    <string name="week">semaine</string>
-    <string name="day">jour</string>
-    <string name="days">jours</string>
     <string name="share">partager</string>
     <string name="shareSubject">Mon humeur du jour</string>
     <string name="shareVia">Partager via</string>
@@ -23,5 +17,6 @@
     <string name="great">de super bonne humeur :D </string>
     <string name="disappointed">déçu :/</string>
     <string name="moodHistoryEmpty">aucune humeur enregistrée</string>
+    <string name="x_days_ago">Il y a %1$d jours</string>
 
 </resources>

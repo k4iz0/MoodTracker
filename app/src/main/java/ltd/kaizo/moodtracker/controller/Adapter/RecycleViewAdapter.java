@@ -1,7 +1,9 @@
 package ltd.kaizo.moodtracker.controller.Adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,8 +26,17 @@ import ltd.kaizo.moodtracker.model.MoodList;
  * The type Recycle view adapter.
  */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.RecycleViewHolder> {
+    /**
+     * The Smiley history.
+     */
     private MoodList smileyHistory;
+    /**
+     * The Date of the day.
+     */
     private String dateNow;
+    /**
+     * The History limit for hte recycle list
+     */
     private final int HISTORY_LIMIT = 7;
 
     /**
@@ -64,47 +76,27 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
         //get the difference of day
         int diffDay = setDiffDay(currentItem.getCurrentDate());
-        //hide the mood of the day
-//        if (diffDay == 0) {
-//            holder.recycleViewlayout.setLayoutParams(new RelativeLayout.LayoutParams(0,0));
-//        }
+        Log.i("INFO", "diffday = :" + diffDay);
 
-        String str;
-        if (diffDay == 1) {
-            holder.itemList.setText(R.string.yesterday);
-        } else if (diffDay == 2) {
-            holder.itemList.setText(R.string.before_yesterday);
-        } else if (diffDay > 6 && diffDay <= 31) {
-            //more than a week
-            if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
-
-                str = holder.itemList.getContext().getString(R.string.ago) + " " + holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.week);
-                holder.itemList.setText(str);
-
-            } else {
-                str = holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.week) + " " + holder.itemList.getContext().getString(R.string.ago);
-                holder.itemList.setText(str);
-            }
-        } else if (diffDay > 31) {
-            //more than a month
-            if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
-                str = holder.itemList.getContext().getString(R.string.ago) + " " + holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.month);
-                holder.itemList.setText(str);
-
-            } else {
-                str = holder.itemList.getContext().getString(R.string.more) + " " + holder.itemList.getContext().getString(R.string.month) + " " + holder.itemList.getContext().getString(R.string.ago);
-                holder.itemList.setText(str);
-            }
-        } else {
-            if (Locale.getDefault().getLanguage().equalsIgnoreCase("fr")) {
-                str = holder.itemList.getContext().getString(R.string.ago) + " " + diffDay + " " + holder.itemList.getContext().getString(R.string.days);
-                holder.itemList.setText(str);
-
-            } else {
-                str = diffDay + " " + holder.itemList.getContext().getString(R.string.days) + " " + holder.itemList.getContext().getString(R.string.ago);
-                holder.itemList.setText(str);
-            }
+        String str = "";
+        Context context = holder.itemList.getContext();
+        Boolean isFrenchLang = Locale.getDefault().getLanguage().equalsIgnoreCase("fr");
+        switch (diffDay) {
+            case 0:
+                //hide the mood of the day
+                holder.recycleViewlayout.setLayoutParams(new RelativeLayout.LayoutParams(0, 0));
+                break;
+            case 1:
+                str = context.getString(R.string.yesterday);
+                break;
+            case 2:
+                str = context.getString(R.string.before_yesterday);
+                break;
+            default:
+                str = String.format(context.getString(R.string.x_days_ago), diffDay);
+                break;
         }
+        holder.itemList.setText(str);
 
     }
 
@@ -131,12 +123,19 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
      * @return the number of days between 2 dates
      */
     private int setDiffDay(String date) {
-        Date now = Calendar.getInstance().getTime();
-        dateNow = new SimpleDateFormat("dd-MM-yyyy").format(now);
-        DateManager currentDate = new DateManager(dateNow);
-        DateManager commentDate = new DateManager((date));
-        int diffDay = currentDate.getDay() - commentDate.getDay();
-        return diffDay;
+        long duration = 0;
+        try {
+
+            Date now = Calendar.getInstance().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date date2 = sdf.parse(date);
+            // 86400000 = number of millisecond in 1 day
+            duration = Math.abs((now.getTime() - date2.getTime()) / 86400000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return (int) duration;
     }
 
     /**

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -32,24 +31,81 @@ import ltd.kaizo.moodtracker.model.MoodList;
  */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Array of pictures link to mood color
+     */
     private MoodItem[] picturelist;
+    /**
+     * The History btn.
+     */
     private ImageButton historyBtn;
+    /**
+     * The Comment btn.
+     */
     private ImageButton commentBtn;
+    /**
+     * The Smiley picture
+     */
     private ImageView smiley;
+    /**
+     * The Comment edit text.
+     */
     private EditText commentEditText;
+    /**
+     * The Main activity layout.
+     */
     private RelativeLayout mainActivityLayout;
+    /**
+     * The Swipe gesture.
+     */
     private SwipeDetector swipeGesture;
+    /**
+     * The Shared preferences.
+     */
     private SharedPreferences sharedPreferences;
+    /**
+     * The Current mood.
+     */
     private MoodItem currentMood;
+    /**
+     * The Mood list.
+     */
     private MoodList moodList;
+    /**
+     * The Comment.
+     */
     private String comment;
+    /**
+     * The Index of picturelist array
+     */
     private int index;
+    /**
+     * The Default mood.
+     */
     private final int DEFAULT_MOOD = 3;
+    /**
+     * The Current mood key.
+     */
     private final String CURRENT_MOOD_KEY = "currentMood";
+    /**
+     * The Mood list key.
+     */
     private final String MOOD_LIST_KEY = "moodList";
+    /**
+     * The Gson.
+     */
     private Gson gson = new Gson();
+    /**
+     * The Share button.
+     */
     private ImageButton shareButton;
+    /**
+     * The Today variable
+     */
     private Boolean today = false;
+    /**
+     * The Current date.
+     */
     private String currentDate;
 
 
@@ -196,18 +252,13 @@ public class MainActivity extends AppCompatActivity {
             default:
                 //happy
                 str += getString(R.string.happy);
-
-
         }
-        //if there's no comment
-        if (currentMood.getComment().equalsIgnoreCase("")) {
-            return str;
-        } else {
-            //else include it
+        //if there's a comment
+        if (!currentMood.getComment().equalsIgnoreCase(""))
+            // include it
             str += "\n " + currentMood.getComment();
-            return str;
 
-        }
+        return str;
     }
 
     /**
@@ -226,14 +277,13 @@ public class MainActivity extends AppCompatActivity {
     public void onSwipeDown() {
         setMood(setIndexRange("down"));
         saveCurrentMood();
-
     }
 
     /**
      * function to check if the index is in range
      *
      * @param direction the direction of the swipe giving by onSwipe function (up or down)
-     * @return index  the mood's position in the array picturelist
+     * @return index the mood's position in the array picturelist
      */
     private int setIndexRange(String direction) {
         if (direction.equals("up") && index < picturelist.length - 1) {
@@ -250,10 +300,8 @@ public class MainActivity extends AppCompatActivity {
      * @param index the mood's position in the array picturelist
      */
     private void setMood(int index) {
-
         mainActivityLayout.setBackgroundResource(picturelist[index].getMoodColor());
         smiley.setImageResource(picturelist[index].getImageResource());
-
     }
 
     /**
@@ -293,23 +341,21 @@ public class MainActivity extends AppCompatActivity {
         if (currentMoodJson != null) {
             currentMood = gson.fromJson(currentMoodJson, MoodItem.class);
             if (setToday()) {
-                setMood(currentMood.getIndex());
-                index = currentMood.getIndex();
+               index = currentMood.getIndex();
             } else {
-                //set current mood to default
+                //set current mood to default if this is not of the day
                 currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageResource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
                 index = DEFAULT_MOOD;
-                setMood(index);
-                saveMoodToList(currentMood);
             }
 
         } else {
             //set current mood to default
             currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageResource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
             index = DEFAULT_MOOD;
-            setMood(index);
-            saveMoodToList(currentMood);
         }
+        setMood(index);
+        saveMoodToList(currentMood);
+
     }
 
     /**
@@ -343,18 +389,18 @@ public class MainActivity extends AppCompatActivity {
      */
     private void saveMoodToList(MoodItem moodItem) {
 
-        if (moodList.getSize() > 0 && !setToday()) {
+        if (moodList.getSize() > 0) {
 
-//            for (MoodItem mood : moodList.getMoodList()) {
-//                //if we find a mood with the same date
-//                if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
-//                    moodList.removeMood(mood);
-//                }
-//            }
+            for (MoodItem mood : moodList.getMoodList()) {
+                //if we find a mood with the same date
+                if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
+                    moodList.removeMood(mood);
+                }
+            }
             moodList.addMood(moodItem);
-//        } else {
-//
-//            moodList.addMood(moodItem);
+        } else {
+
+            moodList.addMood(moodItem);
         }
         sharedPreferences.edit().putString(MOOD_LIST_KEY, gson.toJson(moodList)).apply();
     }
