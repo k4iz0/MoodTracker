@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onSwipeUp() {
         setMood(setIndexRange("up"));
+        currentMood.setComment("");
         saveCurrentMood();
     }
 
@@ -276,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onSwipeDown() {
         setMood(setIndexRange("down"));
+        currentMood.setComment("");
         saveCurrentMood();
     }
 
@@ -341,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentMoodJson != null) {
             currentMood = gson.fromJson(currentMoodJson, MoodItem.class);
             if (setToday()) {
-               index = currentMood.getIndex();
+                index = currentMood.getIndex();
             } else {
                 //set current mood to default if this is not of the day
                 currentMood = new MoodItem(DEFAULT_MOOD, picturelist[DEFAULT_MOOD].getImageResource(), picturelist[DEFAULT_MOOD].getMoodColor(), "");
