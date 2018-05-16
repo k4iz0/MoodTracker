@@ -4,9 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -31,6 +31,18 @@ import ltd.kaizo.moodtracker.model.MoodList;
  */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * The Default mood.
+     */
+    private final int DEFAULT_MOOD = 3;
+    /**
+     * The Current mood key.
+     */
+    private final String CURRENT_MOOD_KEY = "currentMood";
+    /**
+     * The Mood list key.
+     */
+    private final String MOOD_LIST_KEY = "moodList";
     /**
      * Array of pictures link to mood color
      */
@@ -79,18 +91,6 @@ public class MainActivity extends AppCompatActivity {
      * The Index of picturelist array
      */
     private int index;
-    /**
-     * The Default mood.
-     */
-    private final int DEFAULT_MOOD = 3;
-    /**
-     * The Current mood key.
-     */
-    private final String CURRENT_MOOD_KEY = "currentMood";
-    /**
-     * The Mood list key.
-     */
-    private final String MOOD_LIST_KEY = "moodList";
     /**
      * The Gson.
      */
@@ -415,12 +415,7 @@ public class MainActivity extends AppCompatActivity {
     private Boolean setToday() {
         Date now = Calendar.getInstance().getTime();
         currentDate = new SimpleDateFormat("dd-MM-yyyy").format(now);
-        if (currentDate.equalsIgnoreCase(currentMood.getCurrentDate())) {
-            today = true;
-        } else {
-            today = false;
-        }
-        return today;
+        return (currentDate.equalsIgnoreCase(currentMood.getCurrentDate()));
     }
 
     /**

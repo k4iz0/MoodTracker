@@ -1,17 +1,15 @@
 package ltd.kaizo.moodtracker.controller.Activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import java.util.Collections;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.controller.Adapter.RecycleViewAdapter;
-import ltd.kaizo.moodtracker.model.MoodItem;
 import ltd.kaizo.moodtracker.model.MoodList;
 
 /**

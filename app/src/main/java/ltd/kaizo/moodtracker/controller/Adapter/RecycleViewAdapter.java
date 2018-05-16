@@ -3,7 +3,6 @@ package ltd.kaizo.moodtracker.controller.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import ltd.kaizo.moodtracker.R;
 import ltd.kaizo.moodtracker.model.MoodItem;
@@ -27,17 +25,13 @@ import ltd.kaizo.moodtracker.model.MoodList;
  */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.RecycleViewHolder> {
     /**
-     * The Smiley history.
-     */
-    private MoodList smileyHistory;
-    /**
-     * The Date of the day.
-     */
-    private String dateNow;
-    /**
      * The History limit for hte recycle list
      */
     private final int HISTORY_LIMIT = 7;
+    /**
+     * The Smiley history.
+     */
+    private MoodList smileyHistory;
 
     /**
      * Instantiates a new Recycle view adapter
@@ -76,11 +70,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
         //get the difference of day
         int diffDay = setDiffDay(currentItem.getCurrentDate());
-        Log.i("INFO", "diffday = :" + diffDay);
-
         String str = "";
         Context context = holder.itemList.getContext();
-        Boolean isFrenchLang = Locale.getDefault().getLanguage().equalsIgnoreCase("fr");
         switch (diffDay) {
             case 0:
                 //hide the mood of the day
