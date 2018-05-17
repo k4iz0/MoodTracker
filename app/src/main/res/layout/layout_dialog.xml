@@ -9,5 +9,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/question"
         android:inputType="text"
-        android:maxLines="5" />
+        android:maxLines="5"
+        android:selectAllOnFocus="true"/>
 </RelativeLayout>

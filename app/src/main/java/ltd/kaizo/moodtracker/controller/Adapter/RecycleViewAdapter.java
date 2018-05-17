@@ -27,7 +27,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     /**
      * The History limit for hte recycle list
      */
-    private final int HISTORY_LIMIT = 7;
+    private final int HISTORY_LIMIT = 8;
     /**
      * The Smiley history.
      */

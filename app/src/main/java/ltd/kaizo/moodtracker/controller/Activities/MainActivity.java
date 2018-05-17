@@ -1,6 +1,5 @@
 package ltd.kaizo.moodtracker.controller.Activities;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -61,10 +60,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private ImageView smiley;
     /**
-     * The Comment edit text.
-     */
-    private EditText commentEditText;
-    /**
      * The Main activity layout.
      */
     private RelativeLayout mainActivityLayout;
@@ -100,10 +95,7 @@ public class MainActivity extends AppCompatActivity {
      * The Share button.
      */
     private ImageButton shareButton;
-    /**
-     * The Today variable
-     */
-    private Boolean today = false;
+
     /**
      * The Current date.
      */
@@ -130,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * assign picture and background color into arraylist
      */
+
     private void configurelist() {
         picturelist = new MoodItem[5];
         picturelist[0] = new MoodItem(0, R.color.faded_red, R.drawable.smiley_sad);
@@ -179,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
         historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //save current mood
+                saveCurrentMood();
                 //start history activity on click if there's an history
                 if (moodList.getSize() > 1) {
                     Intent historyActivity = new Intent(MainActivity.this, HistoryActivity.class);
@@ -314,7 +309,11 @@ public class MainActivity extends AppCompatActivity {
      */
     private void openDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(R.layout.layout_dialog)
+        View view = getLayoutInflater().inflate(R.layout.layout_dialog, null);
+        final EditText commentEditText = (EditText) view.findViewById(R.id.activity_main_dialog_comment);
+        if (comment != null && !comment.equals(""))
+            commentEditText.setText(currentMood.getComment());
+        builder.setView(view)
                 .setTitle(R.string.comment)
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
@@ -326,8 +325,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //save comment  into sharePreference
-                        Dialog d = (Dialog) dialog;
-                        commentEditText = (EditText) d.findViewById(R.id.activity_main_dialog_comment);
+
                         comment = commentEditText.getText().toString();
                         currentMood.setComment(comment);
                         Toast.makeText(MainActivity.this, R.string.comment_save, Toast.LENGTH_SHORT).show();
@@ -364,6 +362,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * load current mood on resume
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.checkDailyMood();
+    }
+
+    /**
      * save current mood on pause
      */
     @Override
@@ -394,19 +401,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void saveMoodToList(MoodItem moodItem) {
 
-        if (moodList.getSize() > 0) {
-
-            for (MoodItem mood : moodList.getMoodList()) {
-                //if we find a mood with the same date
-                if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
-                    moodList.removeMood(mood);
-                }
+        for (MoodItem mood : moodList.getMoodList()) {
+            //if we find a mood with the same date
+            if (mood.getCurrentDate().equalsIgnoreCase(moodItem.getCurrentDate())) {
+                moodList.removeMood(mood);
             }
-            moodList.addMood(moodItem);
-        } else {
-
-            moodList.addMood(moodItem);
         }
+
+        moodList.addMood(moodItem);
         sharedPreferences.edit().putString(MOOD_LIST_KEY, gson.toJson(moodList)).apply();
     }
 
@@ -418,6 +420,7 @@ public class MainActivity extends AppCompatActivity {
     private Boolean setToday() {
         Date now = Calendar.getInstance().getTime();
         currentDate = new SimpleDateFormat("dd-MM-yyyy").format(now);
+        //if date of the day equals the mood of the day's date
         return (currentDate.equalsIgnoreCase(currentMood.getCurrentDate()));
     }
 
