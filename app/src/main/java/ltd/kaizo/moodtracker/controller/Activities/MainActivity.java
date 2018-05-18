@@ -311,8 +311,8 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.layout_dialog, null);
         final EditText commentEditText = (EditText) view.findViewById(R.id.activity_main_dialog_comment);
-        if (comment != null && !comment.equals(""))
-            commentEditText.setText(currentMood.getComment());
+
+        commentEditText.setText(currentMood.getComment());
         builder.setView(view)
                 .setTitle(R.string.comment)
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
