@@ -14,11 +14,11 @@ An Android app to track your mood
 
 ## Built With
 
-* [Android Studio](https://developer.android.com/studio/) - The ide framework used
+* [Android Studio](https://developer.android.com/studio/) - The ide used
 
 ## Versioning
 
-We use [Git](https://git-scm.com/) and [GitHub](https://github.com)
+* We use [Git](https://git-scm.com/) and [GitHub](https://github.com)
 
 ## Authors
 
