@@ -113,7 +113,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
      * @param date simpleDateFormat dd-MM-YY
      * @return the number of days between 2 dates
      */
-    private int setDiffDay(String date) {
+    public int setDiffDay(String date) {
         long duration = 0;
         try {
 

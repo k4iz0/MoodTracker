@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,7 +30,7 @@ import ltd.kaizo.moodtracker.model.MoodList;
 /**
  * The  Main activity.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeDetector.Communicator {
 
     /**
      * The Default mood.
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private String currentDate;
 
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,8 +148,10 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getPreferences(MODE_PRIVATE);
         //swipe initialization
         swipeGesture = new SwipeDetector(MainActivity.this);
+        gestureDetector = new GestureDetector(this, swipeGesture);
 
     }
+
 
     /**
      * initialize list of mood (moodList) by loading from sharedpreference's file
@@ -263,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
      * On swipe up
      * update the mood to display
      */
+    @Override
     public void onSwipeUp() {
         setMood(setIndexRange("up"));
         currentMood.setComment("");
@@ -273,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
      * On swipe down
      * update the mood to display
      */
+    @Override
     public void onSwipeDown() {
         setMood(setIndexRange("down"));
         currentMood.setComment("");
@@ -424,15 +430,16 @@ public class MainActivity extends AppCompatActivity {
         return (currentDate.equalsIgnoreCase(currentMood.getCurrentDate()));
     }
 
-    /**
-     * method to route touchevent to swipedetector
-     *
-     * @param event MotionEvent
-     * @return the swipeGesture onTouch method
-     */
+    //    /**
+//     * method to route touchevent to swipedetector
+//     *
+//     * @param event MotionEvent
+//     * @return the swipeGesture onTouch method
+//     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return swipeGesture.onTouchEvent(event);
+        return gestureDetector.onTouchEvent(event);
+        //return swipeGesture.onTouchEvent(event);
     }
 
 

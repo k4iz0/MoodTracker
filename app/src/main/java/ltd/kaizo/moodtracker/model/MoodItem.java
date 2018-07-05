@@ -56,11 +56,11 @@ public class MoodItem implements Serializable {
      * @param comment       comment save by the comment button on mainActivity
      */
     public MoodItem(int index, int imageResource, int moodColor, String comment) {
-        this.imageResource = imageResource;
-        this.index = index;
-        this.moodColor = moodColor;
-        this.comment = comment;
-        setCurrentDate();
+            this.imageResource = imageResource;
+            this.index = index;
+            this.moodColor = moodColor;
+            this.comment = comment;
+            setCurrentDate();
     }
 
     /**
